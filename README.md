@@ -3,7 +3,7 @@
 Welcome to the Prisma Cloud Azure workshop! Prisma™ Cloud is a cloud security posture management (CSPM) and cloud workload protection platform (CWPP) solution. It provides comprehensive visibility and threat detection across your organization’s hybrid, multi-cloud environment (Azure, AWS, GCP, Alibaba, Kubernetes). 
 
 This workshop was created as a walkthrough for an in person or virtual workshop, however you may feel free to run through at your own pace.
-### Some Pre-requisites
+### Pre-requisites
 
 * An Azure Subscription
   * This can be any Azure subscription where you have the owner role assignment. We will also be performing some actions in Azure AD and other services that may require the Application Administrator or Global Administrator level of access on the tenant level.
@@ -21,7 +21,7 @@ This workshop was created as a walkthrough for an in person or virtual workshop,
 * A GitHub Account
   * You'll need a personal GitHub account. You can sign up for free [here](https://github.com/join).
 
-  ### Agenda
+### Agenda
 
 The workshop is designed to take approximately 5-6 hours to complete. It can be spread out over a 1 day or 2 days workshop.
 
