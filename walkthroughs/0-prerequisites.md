@@ -18,7 +18,7 @@ Feel free to skip any exercise where you already have an existing account that y
 >* You need an "Outlook" account to complete this exercise. If you do not have one, you can go to [this link](https://outlook.live.com/owa/) and click on the **"Create free account"** option to create a free outlook account.
 >* A credit card will be needed to validate your identity. This card will not be charged unless you upgrade. It will only be used to validate user identity.
 
-1. Open a web browser tab and go to [https://bit.ly/azure-free-sub-trial]((https://bit.ly/azure-free-sub-trial)
+1. Open a web browser tab and go to [https://bit.ly/azure-free-sub-trial](https://bit.ly/azure-free-sub-trial)
 2. Click on **`Start for free`**
 3. Sign in with your Outlook account.
 4. In **`Your profile`** section, complete the following:
