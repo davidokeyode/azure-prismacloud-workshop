@@ -7,20 +7,14 @@ This workshop was created as a walkthrough for an in person or virtual workshop,
 
 * An Azure Subscription
   * This can be any Azure subscription where you have the owner role assignment. We will also be performing some actions in Azure AD and other services that may require the Application Administrator or Global Administrator level of access on the tenant level.
-  * You can sign up for a new Azure accout [here](https://bit.ly/azure-free-sub-trial)
 
 * A Prisma Cloud Enterprise Account
-  * You can sign up for Palo Alto Prisma Cloud trial [https://marketplace.paloaltonetworks.com/s/](https://marketplace.paloaltonetworks.com/s/)
-
+  * Prisma Cloud will be used to protect your Azure environment and services
 * An Azure DevOps Organization
-  * You can sign up [here](https://app.vsaex.visualstudio.com/).
-
 * A JIRA Account
-  * You can sign up for a free trial [here](https://www.atlassian.com/software/jira/free).
-
 * A GitHub Account
-  * You'll need a personal GitHub account. You can sign up for free [here](https://github.com/join).
 
+>* The [first module](walkthroughs/0-prerequisites.md) contains instructions on setting up the required accounts but you can also use existing accounts that you may have.
 ### Agenda
 
 The workshop is designed to take approximately 5-6 hours to complete. It can be spread out over a 1 day or 2 days workshop.
