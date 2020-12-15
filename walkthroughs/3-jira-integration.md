@@ -13,18 +13,18 @@ In the previous module, you added your Azure AD tenant to Prisma Cloud. In this 
 >* Create a JIRA notification template in your Prisma Cloud account
 >* Create an alert rule in Prisma Cloud to raise tasks in JIRA
 ## Prepare JIRA for integration
->* In order to complete this process, the account needs to be have administrative privileges in JIRA
-* Create Prisma Cloud Application link in JIRA
+>* In order to integrate Prisma Cloud with JIRA, we need to create a Prisma Cloud Application link in JIRA. This process requires an account that has administrative privileges in JIRA.
 
-1. Open a web browser tab and go to the [JIRA Sign-In Page](https://id.atlassian.com/login)
->* Sign in with your JIRA credentials
+1. Open a web browser tab and go to the [JIRA Sign-In Page](https://id.atlassian.com/login) and sign in with your JIRA credentials.
 
-2. In the top right corner, click on **`Settings`** → **`Products`**
+2. In the top right corner, click on the **`Settings`** icon → **`Products`**
+
 ![jira-products](../images/3-jira-products.png)
 
 3. In the **Configure Application Links** window, enter your Prisma Cloud console URL and click **`Create new link`**
 >* You can get a full list of the console URLs [from this document](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/get-started-with-prisma-cloud/access-prisma-cloud.html)
->* Make sure you use your console URL.
+>* Make sure you use your console URL for your Prisma cloud tenant.
+
 ![jira-app-link](../images/3-jira-app-link.png)
 
 4. Disregard the message about **`No response was received`** and click **`Continue`**
@@ -33,10 +33,11 @@ In the previous module, you added your Azure AD tenant to Prisma Cloud. In this 
 5. In the **Link applications** window, configure the following:
    * **Application Name**: Prisma-Cloud
    * **Application Type**: Generic Application
-   * Leave other settings as default
+   * **Leave other settings as default**
    * **Create Incoming Link**: Selected
    * Make a note of the JIRA **Application URL** as you will need it later in this module
    * Click **`Continue`**
+
 ![jira-app-link-config](../images/3-jira-app-link-config.png)
 
 6. Still in the **Link applications** window, configure the following:
@@ -47,6 +48,7 @@ In the previous module, you added your Azure AD tenant to Prisma Cloud. In this 
       MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnYoXB+BZ555jUIFyN+0b3g7haTchsyeWwDcUrTcebbDN1jy5zjZ/vp31//L9HzA0WCFtmgj5hhaFcMl1bCFY93oiobsiWsJmMLgDyYBghpManIQ73TEHDIAsV49r2TLtX01iRWSW65CefBHD6b/1rvrhxVDDKjfxgCMLojHBPb7nLqXMxOKrY8s1yCLXyzoFGTN6ankFgyJ0BQh+SMj/hyB59LPVin0bf415ME1FpCJ3yow258sOT7TAJ00ejyyhC3igh+nVQXP+1V0ztpnpfoXUypA7UKvdI0Qf1ZsviyHNwiNg7xgYc+H64cBmAgfcfDNzXyPmJZkM7cGC2y4ukQIDAQAB
    ```
    * Click **`Continue`**
+
 ![jira-app-link-config](../images/3-jira-app-link-config-b.png)
 
 
