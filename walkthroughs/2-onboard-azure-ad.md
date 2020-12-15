@@ -2,7 +2,7 @@
 Title: 2 - Onboard Azure Active Directory (AAD) Tenant to Prisma Cloud
 Description: Follow these instructions to onboard your Azure AD Tenant to Prisma Cloud
 Author: David Okeyode
-------
+---
 
 # Module 1: Onboard Azure Subscription to Prisma Cloud
 
