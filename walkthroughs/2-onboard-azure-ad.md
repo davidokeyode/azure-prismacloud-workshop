@@ -1,6 +1,6 @@
 ---
-Title: 2 - Connect to the ARO cluster
-Description: Follow these instructions to connect to the ARO cluster that was created in the last lesson
+Title: 1 - Onboard Azure AD to Prisma Cloud
+Description: Follow these instructions to onboard your Azure AD Tenant to Prisma Cloud
 Author: David Okeyode
 ---
 # Lesson 2: Connect to the ARO cluster

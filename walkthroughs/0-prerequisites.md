@@ -3,7 +3,7 @@ Title: 0 - Setup Pre-Requisites
 Description: Follow these instructions to setup the pre-requisites needed to complete this workshop
 Author: David Okeyode
 ---
-# Lesson 1: Setup Pre-Requisites
+# Module 0: Setup Pre-Requisites
 
 In this workshop lesson, you will be setting up accounts that you need to follow the lessons in this workshop. Here are the exercises that we will complete in this lesson:
 

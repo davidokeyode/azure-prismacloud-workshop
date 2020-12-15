@@ -1,114 +1,139 @@
 ---
-Title: 2 - Connect to the ARO cluster
-Description: Follow these instructions to connect to the ARO cluster that was created in the last lesson
+Title: 1 - Onboard Azure Subscription to Prisma Cloud
+Description: Follow these instructions to onboard your Azure Subscription to Prisma Cloud
 Author: David Okeyode
 ---
-# Lesson 2: Connect to the ARO cluster
+# Module 1: Onboard Azure Subscription to Prisma Cloud
 
-In the previous lesson, an ARO cluster was created. If you have not completed this lesson, you can refer to it [here](1-create-aro-cluster.md).
-In this workshop lesson, you will connect to the cluster as the kubeadmin user through the OpenShift web console and the OpenShift CLI. You'll be using this cluster for the rest of the lessons in this workshop. Here's what we'll be completing:
+In the previous module, you created the accounts that you need to complete the workshop. If you have not completed that lesson, you can refer to it [here](0-prerequisites.md). In this workshop lesson, you will add your Azure subscription to Prisma Cloud. This is the first step to protecting your cloud environment, services and workloads with Prisma Cloud. Here are the exercises that we will be completing:
 
-> * Connect to the ARO cluster using the OpenShift web console
-> * Connect to the ARO cluster using the OpenShift CLI
+> * Review the permissions needed to complete the onboarding process
+> * Review the permissions that Prisma Cloud will need in your environment
+> * Prepare your Azure subscription for onboarding
+> * Add Azure Subscription in Prisma Cloud
 
-## Connect to the cluster using the OpenShift web console
-In this section, we will be completing the following tasks
-* Obtain `kubeadmin` credentials for your ARO cluster
-* Obtain the ARO cluster console URL
-* Connect to the cluster web console using the `kubeadmin` credentials
+## Review the permissions needed to complete the onboarding process
+>* To successfully onboard and monitor the resources within your Azure subscription, you need to have the right level of permission in the subscription and at the tenant level.
+>* This is referring to the permissions that the onboarding user needs to have (NOT the permissions that Prisma Cloud needs to your environment)
 
-1. Go to [Azure Cloud Shell](https://shell.azure.com) and sign in with your credentials
+* **`Owner`** role assignment on the subscription
+* **`Application Administrator OR Global Administrator`** at the tenant level
 
-2. **Set the following variables in the shell environment in which you will execute the `az` commands.**
+## Review the permissions that Prisma Cloud will need in your environment
+1. Monitor only
+|    | Purpose                   | Permission       |
+|----|--------------------------|--------------|
+| a | Ingestion of resource configuration metadata and activity logs | **`Reader`** role assignment at the subscription level |
+| b | Read flow log **settings** for network security groups (NSGs) along with the details on the storage account to which the flow logs are written | **`Network Contributor`** role assignment on the subscription level **OR** a custom role that allows this action: **`Microsoft.Network/networkWatchers/queryFlowLogStatus/action`** |
+| c | Fetch flow logs from storage accounts and storage account attributes | **`Reader and Data Access`** at the subscription level **OR** to all storage accounts where flow logs are stored |
+| d | To ingest data from Azure Container Registry webhooks that are triggered when a container image or Helm chart is pushed to or deleted from a registry | **`Microsoft.ContainerRegistry/registries/webhooks/getCallbackConfig/action`** |
+| e | To ingest Authentication/Authorization data from Azure App Service that hosts websites and web applications | **`Microsoft.Web/sites/config/list/action`** |
+
+2. Monitor and Protect
+** Same permissions as above and the following:
+|    | Purpose                   | Permission       |
+|----|--------------------------|--------------|
+| 1 | Auto-remediation of storage account policy violations | **`Storage Account Contributor`** role assignment at the subscription level |
+
+>* For a full reference of the permissions, refer to [this document](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/connect-your-cloud-platform-to-prisma-cloud/onboard-your-azure-account/azure-onboarding-checklist.html#id04489406-4377-448f-8d6c-d1623dcce1e7)
+
+
+## Prepare your Azure subscription for onboarding
+>* In order for Prisma Cloud to ingest the network flow logs from an Azure subscription, the following steps needs to be completed:
+   >* Register the Microsoft Insights resource provider
+   >* Enable Network Watcher in the Azure regions that you have resources
+   >* Create a storage account in each region where you have Azure resources
+   >* Enable flow logs for your network security groups (configure the logs to be stored in the storage accounts created earlier)
+
+1. Open a web browser tab and go to the [Azure Cloud Shell](https://shell.azure.com) 
+2. Obtain your Azure Tenant ID and your Subscription ID
+    ```
+    # Make a note of the tenant ID and the subscription ID. They will be used in the next section.
+    az account show --query '{TenantID:tenantId, SubscriptionID:id}'
+    ```
+3. Run the following command to register the Microsoft Insights resource provider:
+    ```
+    az provider register -n Microsoft.insights # register the provider
+    az provider show -n Microsoft.insights --query registrationState # verify registration status
+    ```
+4. Run the following command to enable Network Watcher
+   >* Change the location to the region that you will be using for your lab
    ```
-   LOCATION=uksouth       # the location of your cluster
-   RESOURCEGROUP=aro-workshop-rg   # the resource group of your cluster that you created in the last lesson           
-   CLUSTER=arocluster        # the name of your cluster
+   location=uksouth # set the location variable
+   az network watcher configure -g NetworkWatcherRG  -l $location --enabled true # enable network watcher for the location
+
    ```
-3. **Obtain the `kubeadmin` user password**
-* We will store this value in a variable called **kubeadminpass**
-```
-kubeadminpass=$(az aro list-credentials \
-  --name $CLUSTER \
-  --resource-group $RESOURCEGROUP \
-  --query kubeadminPassword -o tsv)
-```
-```
-echo $kubeadminpass
-```
-
-4. **Obtain the cluster console URL**
-* The URL will be in the following format: `https://console-openshift-console.apps.<random>.<region>.aroapp.io/`
-* This domain name is publicly reachable because it is registered in BOTH the private DNS zone that was automatically created during the setup in the CoreDNS instance used by your ARO cluster.
-* We will store this value in a variable called **consoleURL**
-
-```
- consoleURL=$(az aro show \
-    --name $CLUSTER \
-    --resource-group $RESOURCEGROUP \
-    --query "consoleProfile.url" -o tsv)
-```
-```
-echo $consoleURL
-```
-
-5. **Launch the console URL in a browser and login using the `kubeadmin` credentials.**
-![Azure Red Hat OpenShift login screen](../img/2-aro-console-login.png)
-
-6. Keep the console open as you will be downloading the OpenShift command line tool in from here in an upcoming task
-
-## Connect to the cluster using the OpenShift CLI
-In this section, we will be completing the following tasks:
-* Download and install the OpenShift CLI in Azure CloudShell
-* Retrieve the ARO cluster API server's address
-* Login to the ARO cluster API server using the kubeadmin credentials
-
-1. **Download and install the latest OpenShift 4 CLI for Linux in Azure CloudShell using the following commands**
-```
-cd ~
-wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
-
-mkdir openshift
-tar -zxvf openshift-client-linux.tar.gz -C openshift
-echo 'export PATH=$PATH:~/openshift' >> ~/.bashrc && source ~/.bashrc
-```
-2. **OPTIONAL - If you are using a local shell session, use the following instructions to download and apply the command line tool. Skip this if you are using Azure CloudShell and go to step 3.**
-*In the OpenShift Web Console, click on the **?** on the top right and then on **Command Line Tools**. Download the release appropriate to your machine.
-![Screenshot that highlights the Command Line Tools option in the list when you select the ? icon.](../img/2-aro-download-cli.png)
-
-3. **Retrieve the ARO cluster API server's address**
-```
-apiServer=$(az aro show -g $RESOURCEGROUP -n $CLUSTER --query apiserverProfile.url -o tsv)
-```
-
-4. **Login to the OpenShift cluster's API server using the kubeadmin credentials**
-```
-oc login $apiServer -u kubeadmin -p $kubeadminpass
-```
-You should receive a **Login successful** response after running the command
-
-If you receive an error message, check that the variable values are correct using the `echo` command. You may need to run previous commands to set the values in your session.
-
-![Screenshot that shows successful command line login](../img/2-aro-oc-login.png)
+5. Create a storage account and blob container that will be used to store the flow logs
+   >* Change the location to the region that you will be using for your lab
+   ```
+   group=prismacloud-rg # configure resource group name variable
+   storagename=prisma$RANDOM # configure storage account name variable
+   container=flowlogs # configure blob container name variable
+   location=uksouth # configure resource location variable
+   az group create --name $group --location $location # create resource group
+   az storage account create --name $storagename --resource-group $group --location $location --sku Standard_LRS # create storage account
+   az storage container create --account-name $storagename --name $container # create blob container
+   ```
+6. Enable flow log for your network security groups
+   * Go to the [Azure Portal](https://portal.azure.com) → All Services → Network Watcher → NSG flow logs → Select a NSG from the displayed list → Configure the following:
+      * Status: On
+      * Flow Logs Version: Version 2
+      * Storage Account: Select the storage account that was created earlier and click **`OK`**
+      * Retention Days: 5
+      * Traffic Analysis Status: Off
+      * Click **`Save`** (top left corner)
+   * Repeat the process for other NSGs
 
 
-5. Verify connectivity using a few `oc` commands
-```
-oc get projects # show all projects that the current login has access to
-```
-* For a full reference of how to use the `oc` command line tool, refer to the documentations below:
-   * [Administrator CLI commands](https://docs.openshift.com/container-platform/4.6/cli_reference/openshift_cli/administrator-cli-commands.html)
-   * [Developer CLI commands](https://docs.openshift.com/container-platform/4.6/cli_reference/openshift_cli/developer-cli-commands.html)
+## Add Azure Subscription in Prisma Cloud
+1. Open a web browser and go to your Prisma Cloud console 
+2. Go to **`Settings`** → **`Cloud Accounts`** → **`Add New`** → Select **`Azure`** 
+   * Cloud Account Name: Enter the name of your Azure subscription
+   * Onboard: Azure Subscription
+   * Azure Cloud Type: Commercial
+   * Select Mode: **`Monitor & Protect`**
+   * Click **`Next`**
+>* The mode cannot be changed after an account has been onboarded. You will need to remove the account and re-onboard it to change the mode.
+3. In the **Configure Account** window, configure the following:
+   * Directory (Tenant) ID: Enter the tenant ID that you made a note of in the previous exercise
+   * Subscription ID: Enter the subscription ID that you made a note of in the previous exercise
+   * Click **`Next`**
+4. In the **Account Details** window, download the terraform script
+5. In the **`Azure Cloud Shell`**, upload the terraform script that you just downloaded
+
+6. In **`Azure Cloud Shell`**, run the following commands:
+   ```
+   terraform init
+   terraform apply
+   ```
+>* When prompted to **`Enter a value`**, type **`yes`** and press **`Enter`**
+>* This will register an Azure AD application and grant it the permissions described in Exercise 2 of this module
+
+7. Make a note of the following values from the output of the script:
+   * **`application_client_id`**
+   * **`application_client_secret`**
+   * **`enterprise_application_object_id`**
+
+8. Back in the Prisma Cloud console, in the **Account Details** window, enter the following:
+   * Application (Client) ID: Enter the output value of **`application_client_id`** from Step 7
+   * Application Client Secret: Enter the output value of **`application_client_secret`** from Step 7
+   * Enterprise Application Object ID: Enter the output value of **`enterprise_application_object_id`** from Step 7
+   * Ingest and Monitor Network Security Group Flow Logs: Selected
+   * Click **`Next`**
+
+9. In the **Accounts Groups** window, select **`Default Account Group`** and click **`Next`**
+
+10. In the **Status** window, verify the status and click **`Done`**
+
+11. Click **`Close`**
 
 ## Next steps
 
-In this lesson, you completed the following:
-* Obtained the `kubeadmin` credentials for your cluster
-* Obtained the cluster console URL
-* Connected to the cluster web console using the `kubeadmin` credentials
-* Downloaded and installed the OpenShift CLI in Azure CloudShell
-* Retrieved the ARO cluster API server's address
-* Connected to the ARO cluster API server using the kubeadmin credentials
+In this module, you completed the following:
+> * Reviewed the permissions needed to complete the onboarding process
+> * Reviewed the permissions that Prisma Cloud will need in your environment
+> * Prepared your Azure subscription for onboarding
+> * Added your Azure Subscription in Prisma Cloud
 
-In the next lesson, you will configure Azure AD authentication for your ARO cluster. Click here to proceed to the next lesson:
-> [Configure Azure AD authentication for ARO](3-configure-aro-azuread.md)
+In the next lesson, you will onboard your Azure AD tenant to Prisma Cloud. Click here to proceed to the next lesson:
+> [Onboard your Azure AD tenant to Prisma Cloud](2-onboard-azure-ad.md)
