@@ -20,7 +20,9 @@ In the previous module, you created the accounts that you need to complete the w
 * **`Application Administrator OR Global Administrator`** at the tenant level
 
 ## Review the permissions that Prisma Cloud will need in your environment
-1. Monitor only
+>* The permissions needed by Prisma Cloud depends on the mode that you want to configure. You can either select the option to **`Monitor Only`** which grants Prisma Cloud the permissions to ingest the needed information but not to remediate issues. The other option is **`Monitor and Protect`** which requires permissions to not only ingest the needed information but also to automatically remediate them.
+
+1. **Monitor only**
 
 |    | Purpose                   | Permission       |
 |----|--------------------------|--------------|
@@ -31,8 +33,9 @@ In the previous module, you created the accounts that you need to complete the w
 | e | To ingest Authentication/Authorization data from Azure App Service that hosts websites and web applications | **`Microsoft.Web/sites/config/list/action`** |
 ----
 
-2. Monitor and Protect
-** Same permissions as above and the following:
+2. **Monitor and Protect**
+   * Same permissions as above and the following:
+
 |    | Purpose                   | Permission       |
 |----|--------------------------|--------------|
 | 1 | Auto-remediation of storage account policy violations | **`Storage Account Contributor`** role assignment at the subscription level |
