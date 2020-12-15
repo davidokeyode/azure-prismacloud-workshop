@@ -5,21 +5,21 @@ Author: David Okeyode
 ---
 # Module 1: Onboard Azure Subscription to Prisma Cloud
 
-In the previous module, you created the accounts that you need to complete the workshop. If you have not completed that lesson, you can refer to it [here](0-prerequisites.md). In this workshop lesson, you will add your Azure subscription to Prisma Cloud. This is the first step to protecting your cloud environment, services and workloads with Prisma Cloud. Here are the exercises that we will be completing:
+In the previous module, you created the accounts that you need to complete the workshop. If you have not completed that lesson, you can refer to it [here](0-prerequisites.md). In this module, you will add your Azure subscription to Prisma Cloud. This is the first step to protecting your cloud environment, services and workloads with Prisma Cloud. Onboarding gives Prisma Cloud the permissions needed to ingest resource configuration metadata, activity logs and network flow logs from your Azure subscription. Here are the exercises that we will be completing:
 
 > * Review the permissions needed to complete the onboarding process
 > * Review the permissions that Prisma Cloud will need in your environment
 > * Prepare your Azure subscription for onboarding
 > * Add Azure Subscription in Prisma Cloud
 
-## Review the permissions needed to complete the onboarding process
+## Exercise 1 - Review the permissions needed to complete the onboarding process
 >* To successfully onboard and monitor the resources within your Azure subscription, you need to have the right level of permission in the subscription and at the tenant level.
 >* This is referring to the permissions that the onboarding user needs to have (NOT the permissions that Prisma Cloud needs to your environment)
 
 * **`Owner`** role assignment on the subscription
 * **`Application Administrator OR Global Administrator`** at the tenant level
 
-## Review the permissions that Prisma Cloud will need in your environment
+## Exercise 2 - Review the permissions that Prisma Cloud will need in your environment
 >* The permissions needed by Prisma Cloud depends on the mode that you want to configure. You can either select the option to **`Monitor Only`** which grants Prisma Cloud the permissions to ingest the needed information but not to remediate issues. The other option is **`Monitor and Protect`** which requires permissions to not only ingest the needed information but also to automatically remediate them.
 
 1. **Monitor only**
@@ -44,7 +44,7 @@ In the previous module, you created the accounts that you need to complete the w
 >* For a full reference of the permissions, refer to [this document](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/connect-your-cloud-platform-to-prisma-cloud/onboard-your-azure-account/azure-onboarding-checklist.html#id04489406-4377-448f-8d6c-d1623dcce1e7)
 
 
-## Prepare your Azure subscription for onboarding
+## Exercise 3 - Prepare your Azure subscription for onboarding
 >* In order for Prisma Cloud to ingest the network flow logs from an Azure subscription, the following steps needs to be completed:
    * Register the Microsoft Insights resource provider
    * Enable Network Watcher in the Azure regions that you have resources
@@ -85,7 +85,7 @@ In the previous module, you created the accounts that you need to complete the w
    group=prismacloud-rg 
 
    # configure storage account name variable
-   storagename=prisma$RANDOM 
+   storagename=prismaflow$RANDOM 
 
    # configure blob container name variable
    container=flowlogs 
@@ -104,30 +104,39 @@ In the previous module, you created the accounts that you need to complete the w
    ```
 6. Enable flow log for your network security groups
    * Go to the [Azure Portal](https://portal.azure.com) → All Services → Network Watcher → NSG flow logs → Select a NSG from the displayed list → Configure the following:
-      * Status: On
-      * Flow Logs Version: Version 2
-      * Storage Account: Select the storage account that was created earlier and click **`OK`**
-      * Retention Days: 5
-      * Traffic Analysis Status: Off
+      * **Status**: On
+      * **Flow Logs Version**: Version 2
+      * **Storage Account**: Select the storage account that was created earlier and click **`OK`**
+      * **Retention Days**: 5
+      * **Traffic Analysis Status**: Off
       * Click **`Save`** (top left corner)
-   * Repeat the process for other NSGs
+![azureflowlog-settings](../images/1-azureflowlog-settings.png)
+
+7. Repeat Step 6 for other NSGs.
 
 
-## Add Azure Subscription in Prisma Cloud
+## Exercise 4 - Add Azure Subscription in Prisma Cloud
 1. Open a web browser and go to your Prisma Cloud console 
 2. Go to **`Settings`** → **`Cloud Accounts`** → **`Add New`** → Select **`Azure`** 
-   * Cloud Account Name: Enter the name of your Azure subscription
-   * Onboard: Azure Subscription
-   * Azure Cloud Type: Commercial
-   * Select Mode: **`Monitor & Protect`**
+   * **Cloud Account Name**: Enter the name of your Azure subscription
+   * **Onboard**: Azure Subscription
+   * **Azure Cloud Type**: Commercial
+   * **Select Mode**: **`Monitor & Protect`**
    * Click **`Next`**
 >* The mode cannot be changed after an account has been onboarded. You will need to remove the account and re-onboard it to change the mode.
+![prisma-monitor-protect](../images/1-prisma-monitor-protect.png)
+
 3. In the **Configure Account** window, configure the following:
-   * Directory (Tenant) ID: Enter the tenant ID that you made a note of in the previous exercise
-   * Subscription ID: Enter the subscription ID that you made a note of in the previous exercise
+   * **Directory (Tenant) ID**: Enter the tenant ID that you made a note of in the previous exercise
+   * **Subscription ID**: Enter the subscription ID that you made a note of in the previous exercise
    * Click **`Next`**
+![prisma-configure-account](../images/1-prisma-configure-account.png)
+
 4. In the **Account Details** window, download the terraform script
+![prisma-download-script](../images/1-prisma-download-script.png)
+
 5. In the **`Azure Cloud Shell`**, upload the terraform script that you just downloaded
+![azure-upload-terraform](../images/1-azure-upload-terraform.png)
 
 6. In **`Azure Cloud Shell`**, run the following commands:
    ```
@@ -141,17 +150,21 @@ In the previous module, you created the accounts that you need to complete the w
    * **`application_client_id`**
    * **`application_client_secret`**
    * **`enterprise_application_object_id`**
+![azure-terraform-output](../images/1-azure-terraform-output.png)
 
 8. Back in the Prisma Cloud console, in the **Account Details** window, enter the following:
-   * Application (Client) ID: Enter the output value of **`application_client_id`** from Step 7
-   * Application Client Secret: Enter the output value of **`application_client_secret`** from Step 7
-   * Enterprise Application Object ID: Enter the output value of **`enterprise_application_object_id`** from Step 7
-   * Ingest and Monitor Network Security Group Flow Logs: Selected
+   * **Application (Client) ID**: Enter the output value of **`application_client_id`** from Step 7
+   * **Application Client Secret**: Enter the output value of **`application_client_secret`** from Step 7
+   * **Enterprise Application Object ID**: Enter the output value of **`enterprise_application_object_id`** from Step 7
+   * **Ingest and Monitor Network Security Group Flow Logs**: Selected
    * Click **`Next`**
+![prisma-account-details](../images/1-prisma-account-details.png)
 
 9. In the **Accounts Groups** window, select **`Default Account Group`** and click **`Next`**
+![prisma-account-group](../images/1-prisma-account-group.png)
 
 10. In the **Status** window, verify the status and click **`Done`**
+![prisma-status](../images/1-prisma-status.png)
 
 11. Click **`Close`**
 
