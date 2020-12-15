@@ -174,7 +174,7 @@ In the previous module, you added your Azure AD tenant to Prisma Cloud. In this 
 
 ## Learn more
 * [Integrate Prisma Cloud with Jira](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/configure-external-integrations-on-prisma-cloud/integrate-prisma-cloud-with-jira.html)
-
+* [Create an Alert Rule for Run-Time Checks](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/manage-prisma-cloud-alerts/create-an-alert-rule.html)
 
 ## Next steps
 In this module, you completed the following:
