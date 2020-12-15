@@ -3,6 +3,7 @@ Title: 1 - Onboard Azure Subscription to Prisma Cloud
 Description: Follow these instructions to onboard your Azure Subscription to Prisma Cloud
 Author: David Okeyode
 ---
+
 # Module 1: Onboard Azure Subscription to Prisma Cloud
 
 In the previous module, you created the accounts that you need to complete the workshop. If you have not completed that lesson, you can refer to it [here](0-prerequisites.md). In this module, you will add your Azure subscription to Prisma Cloud. This is the first step to protecting your cloud environment, services and workloads with Prisma Cloud. Onboarding gives Prisma Cloud the permissions needed to ingest resource configuration metadata, activity logs and network flow logs from your Azure subscription. Here are the exercises that we will be completing:
@@ -170,6 +171,12 @@ In the previous module, you created the accounts that you need to complete the w
 
 12. Your Azure subscription should now be onboarded in Prisma Cloud
 
+## Learn more
+* [Azure Cloud Account Onboarding Checklist](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/connect-your-cloud-platform-to-prisma-cloud/onboard-your-azure-account/azure-onboarding-checklist.html)
+* [Add an Azure Subscription on Prisma Cloud](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/connect-your-cloud-platform-to-prisma-cloud/onboard-your-azure-account/add-azure-cloud-account-on-prisma-cloud.html)
+* [Prisma Cloud Azure Permissions](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/connect-your-cloud-platform-to-prisma-cloud/onboard-your-azure-account/azure-onboarding-checklist)
+* [Azure APIs Ingested by Prisma Cloud](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/connect-your-cloud-platform-to-prisma-cloud/onboard-your-azure-account/microsoft-azure-apis-ingested-by-prisma-cloud)
+
 ## Next steps
 
 In this module, you completed the following:
@@ -178,5 +185,5 @@ In this module, you completed the following:
 > * Prepared your Azure subscription for onboarding
 > * Added your Azure Subscription in Prisma Cloud
 
-In the next lesson, you will onboard your Azure AD tenant to Prisma Cloud. Click here to proceed to the next lesson:
+In the next module, you will onboard your Azure AD tenant to Prisma Cloud. Click here to proceed to the next lesson:
 > [Onboard your Azure AD tenant to Prisma Cloud](2-onboard-azure-ad.md)

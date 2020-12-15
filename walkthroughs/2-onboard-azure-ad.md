@@ -3,6 +3,7 @@ Title: 2 - Onboard Azure Active Directory (AAD) Tenant to Prisma Cloud
 Description: Follow these instructions to onboard your Azure AD Tenant to Prisma Cloud
 Author: David Okeyode
 ------
+
 # Module 1: Onboard Azure Subscription to Prisma Cloud
 
 In the previous module, you added your Azure subscription to Prisma Cloud. In this module, you will add your Azure Active Directory (AAD) tenant to Prisma Cloud. This allows Prisma Cloud to ingest AAD user information and configuration. This is the first step to protecting your cloud environment, services and workloads with Prisma Cloud. Here are the exercises that we will be completing:
@@ -61,11 +62,12 @@ In the previous module, you added your Azure subscription to Prisma Cloud. In th
 
 12. Your Azure Active Directory tenant should now be onboarded in Prisma Cloud.
 
+## Learn more
+* [Add an Azure Active Directory Tenant on Prisma Cloud](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/connect-your-cloud-platform-to-prisma-cloud/onboard-your-azure-account/add-azure-active-directory-on-prisma-cloud.html)
 ## Next steps
-
 In this module, you completed the following:
 > * Prepare your AAD tenant for onboarding
 > * Add AAD tenant in Prisma Cloud
 
-In the next lesson, you will Configure JIRA integration in Prisma Cloud. Click here to proceed to the next lesson:
+In the next module, you will Configure JIRA integration in Prisma Cloud. Click here to proceed to the next lesson:
 > [Configure JIRA integration in Prisma Cloud](3-jira-integration.md)
