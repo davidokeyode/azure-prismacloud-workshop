@@ -4,7 +4,7 @@ Description: Follow these instructions to onboard your Azure AD Tenant to Prisma
 Author: David Okeyode
 ---
 
-# Module 1: Onboard Azure Subscription to Prisma Cloud
+# Module 2: Onboard Azure Active Directory (AAD) Tenant to Prisma Cloud
 
 In the previous module, you added your Azure subscription to Prisma Cloud. In this module, you will add your Azure Active Directory (AAD) tenant to Prisma Cloud. This allows Prisma Cloud to ingest AAD user information and configuration. This is the first step to protecting your cloud environment, services and workloads with Prisma Cloud. Here are the exercises that we will be completing:
 
@@ -20,7 +20,7 @@ In the previous module, you added your Azure subscription to Prisma Cloud. In th
 1. Open a web browser tab and go to the [Azure Portal](https://portal.azure.com) 
 
 2. Go to **`Azure Active Directory`** → **`App Registrations`** → Click on **`All Applications`** → Click on the Prisma Cloud App that was created by the terraform template in the previous module. It has the naming format **`Prisma Cloud Onboarding xxxxxx`** 
-![aad-app](../images/1-aad-app.png)
+![aad-app](../images/1-aad-app.png | width=100)
 
 3. In the application window that opened, click on **`API Permissions`** → **`Add Permission`** → **`Microsoft Graph`**
 ![aad-permissions](../images/1-aad-permissions.png)
