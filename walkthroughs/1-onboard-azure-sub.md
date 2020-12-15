@@ -127,6 +127,8 @@ In the previous module, you created the accounts that you need to complete the w
 
 11. Click **`Close`**
 
+12. Your Azure subscription should now be onboarded in Prisma Cloud
+
 ## Next steps
 
 In this module, you completed the following:
