@@ -21,6 +21,7 @@ In the previous module, you created the accounts that you need to complete the w
 
 ## Review the permissions that Prisma Cloud will need in your environment
 1. Monitor only
+
 |    | Purpose                   | Permission       |
 |----|--------------------------|--------------|
 | a | Ingestion of resource configuration metadata and activity logs | **`Reader`** role assignment at the subscription level |
@@ -28,51 +29,75 @@ In the previous module, you created the accounts that you need to complete the w
 | c | Fetch flow logs from storage accounts and storage account attributes | **`Reader and Data Access`** at the subscription level **OR** to all storage accounts where flow logs are stored |
 | d | To ingest data from Azure Container Registry webhooks that are triggered when a container image or Helm chart is pushed to or deleted from a registry | **`Microsoft.ContainerRegistry/registries/webhooks/getCallbackConfig/action`** |
 | e | To ingest Authentication/Authorization data from Azure App Service that hosts websites and web applications | **`Microsoft.Web/sites/config/list/action`** |
+----
 
 2. Monitor and Protect
 ** Same permissions as above and the following:
 |    | Purpose                   | Permission       |
 |----|--------------------------|--------------|
 | 1 | Auto-remediation of storage account policy violations | **`Storage Account Contributor`** role assignment at the subscription level |
+----
 
 >* For a full reference of the permissions, refer to [this document](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/connect-your-cloud-platform-to-prisma-cloud/onboard-your-azure-account/azure-onboarding-checklist.html#id04489406-4377-448f-8d6c-d1623dcce1e7)
 
 
 ## Prepare your Azure subscription for onboarding
 >* In order for Prisma Cloud to ingest the network flow logs from an Azure subscription, the following steps needs to be completed:
-   >* Register the Microsoft Insights resource provider
-   >* Enable Network Watcher in the Azure regions that you have resources
-   >* Create a storage account in each region where you have Azure resources
-   >* Enable flow logs for your network security groups (configure the logs to be stored in the storage accounts created earlier)
+   * Register the Microsoft Insights resource provider
+   * Enable Network Watcher in the Azure regions that you have resources
+   * Create a storage account in each region where you have Azure resources
+   * Enable flow logs for your network security groups (configure the logs to be stored in the storage accounts created earlier)
 
 1. Open a web browser tab and go to the [Azure Cloud Shell](https://shell.azure.com) 
-2. Obtain your Azure Tenant ID and your Subscription ID
+
+2. Obtain your Azure Tenant ID and your Subscription ID by running the following command:
     ```
-    # Make a note of the tenant ID and the subscription ID. They will be used in the next section.
     az account show --query '{TenantID:tenantId, SubscriptionID:id}'
     ```
-3. Run the following command to register the Microsoft Insights resource provider:
+    >* Make a note of the tenant ID and the subscription ID. They will be used in the next section.
+
+3. Run the following commands to register the Microsoft Insights resource provider:
     ```
-    az provider register -n Microsoft.insights # register the provider
-    az provider show -n Microsoft.insights --query registrationState # verify registration status
+    # register the provider
+    az provider register -n Microsoft.insights 
+
+    # verify registration status
+    az provider show -n Microsoft.insights --query registrationState 
     ```
+
 4. Run the following command to enable Network Watcher
    >* Change the location to the region that you will be using for your lab
    ```
-   location=uksouth # set the location variable
-   az network watcher configure -g NetworkWatcherRG  -l $location --enabled true # enable network watcher for the location
+   # set the location variable
+   location=uksouth 
+   
+   # enable network watcher for the location
+   az network watcher configure -g NetworkWatcherRG  -l $location --enabled true 
 
    ```
 5. Create a storage account and blob container that will be used to store the flow logs
    >* Change the location to the region that you will be using for your lab
    ```
-   group=prismacloud-rg # configure resource group name variable
-   storagename=prisma$RANDOM # configure storage account name variable
-   container=flowlogs # configure blob container name variable
-   location=uksouth # configure resource location variable
-   az group create --name $group --location $location # create resource group
-   az storage account create --name $storagename --resource-group $group --location $location --sku Standard_LRS # create storage account
-   az storage container create --account-name $storagename --name $container # create blob container
+   # configure resource group name variable
+   group=prismacloud-rg 
+
+   # configure storage account name variable
+   storagename=prisma$RANDOM 
+
+   # configure blob container name variable
+   container=flowlogs 
+
+   # configure resource location variable
+   location=uksouth 
+
+   # create resource group
+   az group create --name $group --location $location 
+
+   # create storage account
+   az storage account create --name $storagename --resource-group $group --location $location --sku Standard_LRS 
+   
+   # create blob container
+   az storage container create --account-name $storagename --name $container 
    ```
 6. Enable flow log for your network security groups
    * Go to the [Azure Portal](https://portal.azure.com) → All Services → Network Watcher → NSG flow logs → Select a NSG from the displayed list → Configure the following:
