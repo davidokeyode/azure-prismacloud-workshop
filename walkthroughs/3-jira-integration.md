@@ -117,17 +117,21 @@ In the previous module, you added your Azure AD tenant to Prisma Cloud. In this 
    * **Jira Fields**: Include **`Description`** in the selection. Mandatory fields are automatically selected based on the configuration in JIRA.
    * **Summary**: Construct the information that will be added to the summary
    ```
-      PolicyType <$PolicyType> violations detected in CloudType <$CloudType> - PolicyName <$PolicyName>
+      <$CloudType> security/compliance violations detected  - PolicyName <$PolicyName>
    ```
    * **Reporter**: Enter a JIRA user's name. The name will be auto-filled as you type it.
    * **Description**: Construct the information that will be added to the description
    ```
-      PolicyDescription <$PolicyDescription>
-      RiskRating <$RiskRating>
-      ResourceName <$ResourceName>
-      ResourceRegion <$ResourceRegion>
-      ResourceType <$ResourceType>
-      PolicyRecommendation <$PolicyRecommendation>
+      Issue Description: <$PolicyDescription>
+      Severity: <$RiskRating>
+      Affected Resource: <$ResourceName>
+      Resource Type: <$ResourceType>
+      Resource Region: <$ResourceRegion>
+      Cloud Account Name: <$AccountName>
+      Alert URL: <$CallbackUrl>
+      Detection Time: <$LastSeen>
+      Resolution Steps: 
+      <$PolicyRecommendation>
    ```
    * Click **`Next`**
 ![prisma-jira-alert-format](../images/3-prisma-jira-alert-format.png)
