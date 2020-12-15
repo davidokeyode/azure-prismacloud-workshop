@@ -28,7 +28,7 @@ The workshop is designed to take approximately 5-6 hours to complete. It can be 
 | 02 | [Onboard Azure AD to Prisma Cloud](walkthroughs/2-onboard-azure-ad.md)                | Hands on Lab |
 | 03 | [Configure JIRA integration in Prisma Cloud](walkthroughs/3-jira-integration.md) | Hands on Lab |
 | 04 | [Deploy vulnerable workload using terraform](walkthroughs/4-deploy-vulnearble-workload.md) | Hands on Lab |
-| 05 | [Respond and remediate issues with Prisma Cloud](walkthroughs/5-respond-and-remediate.md)  | Hands on Lab |
+| 05 | [Remediate Security Risks and Compliance Violations with Prisma Cloud](walkthroughs/5-respond-and-remediate.md)  | Hands on Lab |
 | 06 | [Enable auto-remediation and verify](walkthroughs/6-configure-auto-remediation.md) | Hands on Lab |
 | 07 | Implement IaC scanning    | Hands on Lab |
 | 08 | Wrap / Clean Up     | Hands on Lab |

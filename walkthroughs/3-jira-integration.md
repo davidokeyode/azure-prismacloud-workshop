@@ -12,7 +12,8 @@ In the previous module, you added your Azure AD tenant to Prisma Cloud. In this 
 >* Configure JIRA integration in your Prisma Cloud account
 >* Create a JIRA notification template in your Prisma Cloud account
 >* Create an alert rule in Prisma Cloud to raise tasks in JIRA
-## Prepare JIRA for integration
+
+## Exercise 1 - Prepare JIRA for integration
 >* In order to integrate Prisma Cloud with JIRA, we need to create a Prisma Cloud Application link in JIRA. This process requires an account that has administrative privileges in JIRA.
 
 1. Open a web browser tab and go to the [JIRA Sign-In Page](https://id.atlassian.com/login) and sign in with your JIRA credentials.
@@ -53,7 +54,7 @@ In the previous module, you added your Azure AD tenant to Prisma Cloud. In this 
 
 
 
-## Add AAD tenant in Prisma Cloud
+## Exercise 2 - Configure JIRA integration in Prisma Cloud
 1. Open a web browser and go to your Prisma Cloud console 
 2. Go to **`Settings`** → **`Integrations`** → **`Add New`**
 
@@ -95,7 +96,7 @@ In the previous module, you added your Azure AD tenant to Prisma Cloud. In this 
 
 
 
-## Create notification template in Prisma Cloud
+## Exercise 3 - Create notification template in Prisma Cloud
 1. In the Prisma Cloud console, go to **`Alerts`** → **`Notification Templates`** → **`Add New`**.
 
 ![jira-add-notification](../images/3-jira-add-notification.png)
@@ -117,7 +118,7 @@ In the previous module, you added your Azure AD tenant to Prisma Cloud. In this 
    * **Jira Fields**: Include **`Description`** in the selection. Mandatory fields are automatically selected based on the configuration in JIRA.
    * **Summary**: Construct the information that will be added to the summary
    ```
-      <$CloudType> security/compliance violations detected  - PolicyName <$PolicyName>
+      <$CloudType> security/compliance violations detected  - <$PolicyName>
    ```
    * **Reporter**: Enter a JIRA user's name. The name will be auto-filled as you type it.
    * **Description**: Construct the information that will be added to the description
@@ -141,7 +142,7 @@ In the previous module, you added your Azure AD tenant to Prisma Cloud. In this 
 ![prisma-jira-template-test](../images/3-prisma-jira-template-test.png)
 
 
-## Create alert rule in Prisma Cloud
+## Exercise 4 - Create alert rule in Prisma Cloud
 1. In the Prisma Cloud console, go to **`Alerts`** → **`Alert Rules`** → **`Add New`**.
 
 ![prisma-alertrule-add](../images/3-prisma-alertrule-add.png)
