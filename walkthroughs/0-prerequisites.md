@@ -68,23 +68,37 @@ Feel free to skip any exercise where you already have an existing account that y
 ## Exercise 3: Create a JIRA account
 1. Open a web browser tab and go to [https://www.atlassian.com/software/jira/free](https://www.atlassian.com/software/jira/free).
 2. Under **`Jira Software`**, click on **`Choose one`**
+![jira-selection](../images/0-jira-selection.png)
+
 3. Click on **`Sign up with email`** and complete the following:
-   * Work email: Enter your Outlook email address (the same one that you used to sign up for your Azure subscription)
+   * Work email: Enter your Outlook email address (the same one that you used to sign up for your Azure subscription).
    * Password: Enter your password
    * First Name: Enter your first name
    * Last Name: Enter your last name
    * Click **`Agree`**
    * Complete the captcha that you are presented
 >* A verification email will be sent to your email address
+![jira-signup](../images/0-jira-signup.png)
+
 4. Go to your email inbox and click **`Yes, verify me`** to verify your email.
+![jira-email-verify](../images/0-jira-email-verify.png)
+
 5. In the **`Let's get started`** window, enter a name for your site and click **`Continue`**
+>* This is like an organization name
+![jira-email-verify](../images/0-jira-site-name.png)
+
 6. You can skip the questions that you are presented and the option to invite team mates
 7. Select **`Kanban*`** for the template
+![jira-kanban](../images/0-jira-kanban.png)
+
 8. In the **`Create Project`** window, complete the following:
    * Name: Azure-Cloud-Security
    * Key: ACS
    * Click **`Create`**
+![jira-project](../images/0-jira-project.png)
+
 9. You should now be able to access your JIRA console
+![jira-project](../images/0-jira-kanban.png)
 
 
 ## Exercise 4: Create a Slack account

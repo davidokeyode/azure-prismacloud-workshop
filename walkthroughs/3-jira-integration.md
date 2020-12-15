@@ -1,114 +1,162 @@
 ---
-Title: 2 - Connect to the ARO cluster
-Description: Follow these instructions to connect to the ARO cluster that was created in the last lesson
+Title: 3 - Configure JIRA integration in Prisma Cloud
+Description: Follow these instructions to integrate your JIRA project with Prisma Cloud
 Author: David Okeyode
 ---
-# Lesson 2: Connect to the ARO cluster
 
-In the previous lesson, an ARO cluster was created. If you have not completed this lesson, you can refer to it [here](1-create-aro-cluster.md).
-In this workshop lesson, you will connect to the cluster as the kubeadmin user through the OpenShift web console and the OpenShift CLI. You'll be using this cluster for the rest of the lessons in this workshop. Here's what we'll be completing:
+# Module 3: Configure JIRA integration in Prisma Cloud
 
-> * Connect to the ARO cluster using the OpenShift web console
-> * Connect to the ARO cluster using the OpenShift CLI
+In the previous module, you added your Azure AD tenant to Prisma Cloud. In this module, you will integrate your JIRA project with Prisma Cloud. This allows Prisma Cloud to generate tickets in JIRA for security risks and incidents for protected subscriptions, services and workloads. Here are the exercises that we will be completing:
 
-## Connect to the cluster using the OpenShift web console
-In this section, we will be completing the following tasks
-* Obtain `kubeadmin` credentials for your ARO cluster
-* Obtain the ARO cluster console URL
-* Connect to the cluster web console using the `kubeadmin` credentials
+>* Prepare your JIRA account for integration into Prisma Cloud
+>* Configure JIRA integration in your Prisma Cloud account
+>* Create a JIRA notification template in your Prisma Cloud account
+>* Create an alert rule in Prisma Cloud to raise tasks in JIRA
+## Prepare JIRA for integration
+>* In order to complete this process, the account needs to be have administrative privileges in JIRA
+* Create Prisma Cloud Application link in JIRA
 
-1. Go to [Azure Cloud Shell](https://shell.azure.com) and sign in with your credentials
+1. Open a web browser tab and go to the [JIRA Sign-In Page](https://id.atlassian.com/login)
+>* Sign in with your JIRA credentials
 
-2. **Set the following variables in the shell environment in which you will execute the `az` commands.**
+2. In the top right corner, click on **`Settings`** → **`Products`**
+![jira-products](../images/3-jira-products.png)
+
+3. In the **Configure Application Links** window, enter your Prisma Cloud console URL and click **`Create new link`**
+>* You can get a full list of the console URLs [from this document](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/get-started-with-prisma-cloud/access-prisma-cloud.html)
+>* Make sure you use your console URL.
+![jira-app-link](../images/3-jira-app-link.png)
+
+4. Disregard the message about **`No response was received`** and click **`Continue`**
+![jira-app-link-message](../images/3-jira-app-link-message.png)
+
+5. In the **Link applications** window, configure the following:
+   * **Application Name**: Prisma-Cloud
+   * **Application Type**: Generic Application
+   * Leave other settings as default
+   * **Create Incoming Link**: Selected
+   * Make a note of the JIRA **Application URL** as you will need it later in this module
+   * Click **`Continue`**
+![jira-app-link-config](../images/3-jira-app-link-config.png)
+
+6. Still in the **Link applications** window, configure the following:
+   * **Consumer Key**: Specify a complex key (make a note of this as it will be needed later in this module)
+   * **Consumer Name**: Prisma-To-Jira-Integration
+   * **Public Key**: 
    ```
-   LOCATION=uksouth       # the location of your cluster
-   RESOURCEGROUP=aro-workshop-rg   # the resource group of your cluster that you created in the last lesson           
-   CLUSTER=arocluster        # the name of your cluster
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnYoXB+BZ555jUIFyN+0b3g7haTchsyeWwDcUrTcebbDN1jy5zjZ/vp31//L9HzA0WCFtmgj5hhaFcMl1bCFY93oiobsiWsJmMLgDyYBghpManIQ73TEHDIAsV49r2TLtX01iRWSW65CefBHD6b/1rvrhxVDDKjfxgCMLojHBPb7nLqXMxOKrY8s1yCLXyzoFGTN6ankFgyJ0BQh+SMj/hyB59LPVin0bf415ME1FpCJ3yow258sOT7TAJ00ejyyhC3igh+nVQXP+1V0ztpnpfoXUypA7UKvdI0Qf1ZsviyHNwiNg7xgYc+H64cBmAgfcfDNzXyPmJZkM7cGC2y4ukQIDAQAB
    ```
-3. **Obtain the `kubeadmin` user password**
-* We will store this value in a variable called **kubeadminpass**
-```
-kubeadminpass=$(az aro list-credentials \
-  --name $CLUSTER \
-  --resource-group $RESOURCEGROUP \
-  --query kubeadminPassword -o tsv)
-```
-```
-echo $kubeadminpass
-```
-
-4. **Obtain the cluster console URL**
-* The URL will be in the following format: `https://console-openshift-console.apps.<random>.<region>.aroapp.io/`
-* This domain name is publicly reachable because it is registered in BOTH the private DNS zone that was automatically created during the setup in the CoreDNS instance used by your ARO cluster.
-* We will store this value in a variable called **consoleURL**
-
-```
- consoleURL=$(az aro show \
-    --name $CLUSTER \
-    --resource-group $RESOURCEGROUP \
-    --query "consoleProfile.url" -o tsv)
-```
-```
-echo $consoleURL
-```
-
-5. **Launch the console URL in a browser and login using the `kubeadmin` credentials.**
-![Azure Red Hat OpenShift login screen](../img/2-aro-console-login.png)
-
-6. Keep the console open as you will be downloading the OpenShift command line tool in from here in an upcoming task
-
-## Connect to the cluster using the OpenShift CLI
-In this section, we will be completing the following tasks:
-* Download and install the OpenShift CLI in Azure CloudShell
-* Retrieve the ARO cluster API server's address
-* Login to the ARO cluster API server using the kubeadmin credentials
-
-1. **Download and install the latest OpenShift 4 CLI for Linux in Azure CloudShell using the following commands**
-```
-cd ~
-wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
-
-mkdir openshift
-tar -zxvf openshift-client-linux.tar.gz -C openshift
-echo 'export PATH=$PATH:~/openshift' >> ~/.bashrc && source ~/.bashrc
-```
-2. **OPTIONAL - If you are using a local shell session, use the following instructions to download and apply the command line tool. Skip this if you are using Azure CloudShell and go to step 3.**
-*In the OpenShift Web Console, click on the **?** on the top right and then on **Command Line Tools**. Download the release appropriate to your machine.
-![Screenshot that highlights the Command Line Tools option in the list when you select the ? icon.](../img/2-aro-download-cli.png)
-
-3. **Retrieve the ARO cluster API server's address**
-```
-apiServer=$(az aro show -g $RESOURCEGROUP -n $CLUSTER --query apiserverProfile.url -o tsv)
-```
-
-4. **Login to the OpenShift cluster's API server using the kubeadmin credentials**
-```
-oc login $apiServer -u kubeadmin -p $kubeadminpass
-```
-You should receive a **Login successful** response after running the command
-
-If you receive an error message, check that the variable values are correct using the `echo` command. You may need to run previous commands to set the values in your session.
-
-![Screenshot that shows successful command line login](../img/2-aro-oc-login.png)
+   * Click **`Continue`**
+![jira-app-link-config](../images/3-jira-app-link-config-b.png)
 
 
-5. Verify connectivity using a few `oc` commands
-```
-oc get projects # show all projects that the current login has access to
-```
-* For a full reference of how to use the `oc` command line tool, refer to the documentations below:
-   * [Administrator CLI commands](https://docs.openshift.com/container-platform/4.6/cli_reference/openshift_cli/administrator-cli-commands.html)
-   * [Developer CLI commands](https://docs.openshift.com/container-platform/4.6/cli_reference/openshift_cli/developer-cli-commands.html)
+## Add AAD tenant in Prisma Cloud
+1. Open a web browser and go to your Prisma Cloud console 
+2. Go to **`Settings`** → **`Integrations`** → **`Add New`**
+![prisma-integrate-add](../images/3-prisma-integrate-add.png)
+
+3. In the **Add Integration** window, configure the following:
+   * **Integration Type**: JIRA
+   * **Integration Name**: Prisma-To-Jira-Integration
+   * **Description**: Prisma Cloud to JIRA Integration
+   * **JIRA Login URL**: The JIRA Application URL that you made a note of earlier
+   * **Consumer Key**: Enter the consumer key that you made a note of earlier
+   * Click **`Generate Token`** 
+   * You will see a **Token generated** message. Click **`Next`**
+![jira-integrate-config](../images/3-jira-integrate-config.png)
+
+4. Click the **`secret key URL link`** to retrieve the secret key.
+![prisma-jira-secret-key](../images/3-prisma-jira-secret-key.png)
+
+5. In the **Welcome to JIRA** window, click **`Allow`**.
+>* This gives Prisma Cloud read and write permissions in your Jira account
+![prisma-jira-allow](../images/3-prisma-jira-allow.png)
+
+6. In the **Access Approved** page, copy the **`Verification Code`**.
+![prisma-verification](../images/3-prisma-verification.png)
+
+7. Back in the Prisma Cloud console, paste the varification code that you copied as the **`secret key`** → Click on **`Generate token`**
+![prisma-jira-key](../images/3-prisma-jira-key.png)
+
+8. You will see a **Token generated** message. Click **`Test`**.
+![prisma-jira-key](../images/3-prisma-jira-test.png)
+>* You will see a success message in the top right corner
+
+9. Click on **`SAVE`**
+
+## Create notification template in Prisma Cloud
+1. In the Prisma Cloud console, go to **`Alerts`** → **`Notification Templates`** → **`Add New`**.
+![jira-add-notification](../images/3-jira-add-notification.png)
+
+2. In the **Choose Notification Template** window, select JIRA
+![prisma-select-jira](../images/3-prisma-select-jira.png)
+
+3. In the **Add JIRA Notification Template** window, configure the following:
+   * **Template Name**: Jira-Azure-Alert-Template
+   * **Integration**: Prisma-To-Jira-Integration
+   * **Project**: Azure-Cloud-Security
+   * **Issue Type**: Task
+   * Click **`Next`**
+![prisma-jira-template](../images/3-prisma-jira-template.png)
+
+4. In the **Jira Fields** section, configure the following:
+   * **Jira Fields**: Include **`Description`** in the selection. Mandatory fields are automatically selected based on the configuration in JIRA.
+   * **Summary**: Construct the information that will be added to the summary
+   ```
+   PolicyType <$PolicyType> violations detected in CloudType <$CloudType> - PolicyName <$PolicyName>
+   ```
+   * **Reporter**: Enter a JIRA user's name. The name will be auto-filled as you type it.
+   * **Description**: Construct the information that will be added to the description
+   ```
+   PolicyDescription <$PolicyDescription>
+   RiskRating <$RiskRating>
+   ResourceName <$ResourceName>
+   ResourceRegion <$ResourceRegion>
+   ResourceType <$ResourceType>
+   PolicyRecommendation <$PolicyRecommendation>
+   ```
+   * Click **`Next`**
+![prisma-jira-alert-format](../images/3-prisma-jira-alert-format.png)
+
+5. In the **Review** section, click **`Test`** then click **`Save`**
+![prisma-jira-template-test](../images/3-prisma-jira-template-test.png)
+
+
+## Create alert rule in Prisma Cloud
+1. In the Prisma Cloud console, go to **`Alerts`** → **`Alert Rules`** → **`Add New`**.
+![prisma-alertrule-add](../images/3-prisma-alertrule-add.png)
+
+2. In the **Select Alert Rule Type** window, select **`Run`**
+![prisma-alertrule-run](../images/3-prisma-alertrule-run.png)
+
+3. In the **Add Alert Rule** window, configure the following:
+   * **Alert Rule Name**: Azure-Security-Alert-Rule
+   * **Description**: Alert Rule for Azure Subscriptions
+   * Click **`Next`**
+
+4. In the **Target** section, configure the following:
+   * **Account Groups**: Select the **`Default Account Group`** or another account group that includes your Azure subscription
+   * Click **`Next`**
+
+5. In the **Select Policies** section, configure the following:
+   * **Select all policies**: Selected 
+   * Click **`Next`**
+
+6. In the **Set Alert Notification** section, configure the following:
+   * **JIRA**: Enabled
+   * **Templates**: Jira-Azure-Alert-Template
+   * **Trigger notification for config alert only after the alert is open for**: 0
+   * Click **`Save`**
+
+## Learn more
+* [Integrate Prisma Cloud with Jira](https://docs.paloaltonetworks.com/prisma/prisma-cloud/prisma-cloud-admin/configure-external-integrations-on-prisma-cloud/integrate-prisma-cloud-with-jira.html)
 
 ## Next steps
+In this module, you completed the following:
+>* Prepared your JIRA account for integration into Prisma Cloud
+>* Configured JIRA integration in your Prisma Cloud account
+>* Created a JIRA notification template in your Prisma Cloud account
+>* Created an alert rule in Prisma Cloud to raise tasks in JIRA
 
-In this lesson, you completed the following:
-* Obtained the `kubeadmin` credentials for your cluster
-* Obtained the cluster console URL
-* Connected to the cluster web console using the `kubeadmin` credentials
-* Downloaded and installed the OpenShift CLI in Azure CloudShell
-* Retrieved the ARO cluster API server's address
-* Connected to the ARO cluster API server using the kubeadmin credentials
-
-In the next lesson, you will configure Azure AD authentication for your ARO cluster. Click here to proceed to the next lesson:
-> [Configure Azure AD authentication for ARO](3-configure-aro-azuread.md)
+In the next module, you will deploy a vulnerable by design template in your Azure subscription. Click here to proceed to the next module:
+> [Deploy vulnerable workload using terraform](4-deploy-vulnearble-workload.md)
