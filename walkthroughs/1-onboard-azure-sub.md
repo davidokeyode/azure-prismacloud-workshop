@@ -52,7 +52,7 @@ In the previous module, you created the accounts that you need to complete the w
    * Create a storage account in each region where you have Azure resources
    * Enable flow logs for your network security groups (configure the logs to be stored in the storage accounts created earlier)
 
-1. Open a web browser tab and go to the [Azure Cloud Shell](https://shell.azure.com) 
+1. Open a web browser tab and go to the [Azure Cloud Shell](https://shell.azure.com). Sign in with your Azure credentials. Ensure that you are in the **`Bash`** terminal.
 
 2. Obtain your Azure Tenant ID and your Subscription ID by running the following command:
     ```
