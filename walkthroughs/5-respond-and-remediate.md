@@ -1,6 +1,6 @@
 ---
-Title: 2 - Connect to the ARO cluster
-Description: Follow these instructions to connect to the ARO cluster that was created in the last lesson
+Title: 5 - Remediate Security Risks and Compliance Violations with Prisma Cloud
+Description: Follow these instructions to explore the Prisma Cloud console, remediate security risks and compliance violations using Prisma Cloud
 Author: David Okeyode
 ---
 # Lesson 2: Connect to the ARO cluster

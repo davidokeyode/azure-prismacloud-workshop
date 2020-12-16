@@ -44,10 +44,11 @@ Author: David Okeyode
       az resource list -g vulnerable-by-design-test --query '[].{Name:name, Type:type}' -o table
    ```
 
+5. Within a few minutes after deployment, you should see alerts raised in your JIRA project!
 ## Next steps
 
 In this lesson, you completed the following:
 * Deployed vulnerable services to Azure using terraform
 
 In the next lesson, you will remediate security risks and and compliance violations with Prisma Cloud. Click here to proceed to the next lesson:
-> [Remediate risks and incidents with Prisma Cloud](5-respond-and-remediate.md)
+> [Remediate Security Risks and Compliance Violations with Prisma Cloud](5-respond-and-remediate.md)
